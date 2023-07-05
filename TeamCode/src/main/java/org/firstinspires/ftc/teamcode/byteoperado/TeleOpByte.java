@@ -118,7 +118,7 @@ public class TeleOpByte extends OpMode {
 
     // criação da variavel de tempo
     ElapsedTime tempo = new ElapsedTime();
-
+    ElapsedTime tempoServo = new ElapsedTime();
 
 
 
@@ -170,6 +170,11 @@ public class TeleOpByte extends OpMode {
 
         Arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        MDF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        MEF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        MET.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        MDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
     }
 
     // criação da função de loop
@@ -204,6 +209,9 @@ public class TeleOpByte extends OpMode {
         if(gamepad1.right_bumper){
             PIDVelMove(motorEsquerdoFf, motorDireitoFf , motorEsquerdoTf, motorDireitoTf  );
         }
+        else if(gamepad1.left_bumper){
+                PIDVelMove(motorEsquerdoFf * 0.5 , motorDireitoFf * 0.5 , motorEsquerdoTf * 0.5, motorDireitoTf * 0.5 );
+        }
         else {
             PIDVelMove(motorEsquerdoFf * 0.8, motorDireitoFf * 0.8, motorEsquerdoTf * 0.8, motorDireitoTf * 0.8);
         }
@@ -213,22 +221,22 @@ public class TeleOpByte extends OpMode {
 
         // Seta de baixo
         if(gamepad1.dpad_down){
-            PIDVelMoveAll(-0.6);
+            allMotorsPower(-0.6,-0.6,-0.6,-0.6);
         }
 
         // Seta de cima
         if(gamepad1.dpad_up){
-            PIDVelMoveAll(0.6);
+            allMotorsPower(0.6,0.6,0.6,0.6);
         }
 
         // Seta da direita
         if(gamepad1.dpad_right){
-            PIDVelMove(0.6,-0.6,-0.6,0.6);
+            allMotorsPower(0.6,-0.6,-0.6,0.6);
         }
 
         // Seta da esquerda
         if(gamepad1.dpad_left){
-            PIDVelMove(-0.6,0.6,0.6,-0.6);
+            allMotorsPower(-0.5,0.5,0.5,-0.5);;
         }
 
 
@@ -311,24 +319,26 @@ public class TeleOpByte extends OpMode {
         // Criação das varíaveis tanto de força quanto dos botões
         // utilizados para abrir e fechar o servo
 
-        boolean poderAberto = gamepad2.a;
-        boolean poderFechado = gamepad2.b;
+        boolean bottonServo = gamepad2.a;
         double aberto = 0;
-        double fechado = 1;
+        double fechado = 0.70;
 
         // Função que define o servo estar aberto
 
-        if (poderAberto) {
-            powServo = aberto;
-            servoMotor.setPosition(powServo);
+        if (bottonServo && tempoServo.seconds() >= 0.3) {
+            if (powServo == aberto){
+                powServo = fechado;
+                servoMotor.setPosition(powServo);
+            }
+            else if(powServo == fechado){
+                powServo = aberto;
+                servoMotor.setPosition(powServo);
+            }
+            tempoServo.reset();
         }
+
 
         // Função que define o servo estar fechado
-
-        else if (poderFechado) {
-            powServo = fechado;
-            servoMotor.setPosition(powServo);
-        }
 
         // Função que mostra o poder do servo no Drive Hub
         telemetry.addData("A potencia do motor do servo é de:", powServo);

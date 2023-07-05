@@ -34,8 +34,8 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
     public static double X_MULTIPLIER = 1; // Multiplier in the X direction
     public static double Y_MULTIPLIER = 1; // Multiplier in the Y direction
 
-    public static double LATERAL_DISTANCE = 10; // MUDAR ISSO in; distance between the left and right wheels
-    public static double FORWARD_OFFSET = 4; // MUDAR ISSO in; offset of the lateral wheel
+    public static double LATERAL_DISTANCE = 6; // in; distance between the left and right wheels
+    public static double FORWARD_OFFSET = 3; // MUDAR ISSO in; offset of the lateral wheel
 
     private Encoder leftEncoder, rightEncoder, frontEncoder;
 
@@ -65,24 +65,19 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
     @NonNull
     @Override
     public List<Double> getWheelPositions() {
-        //int leftPos = leftEncoder.getCurrentPosition();
-        //int rightPos = rightEncoder.getCurrentPosition();
-        //int frontPos = frontEncoder.getCurrentPosition();
+        int leftPos = leftEncoder.getCurrentPosition();
+        int rightPos = rightEncoder.getCurrentPosition();
+        int frontPos = frontEncoder.getCurrentPosition();
 
-        //lastEncPositions.clear();
-        //lastEncPositions.add(leftPos);
-        //lastEncPositions.add(rightPos);
-        //lastEncPositions.add(frontPos);
+        lastEncPositions.clear();
+        lastEncPositions.add(leftPos);
+        lastEncPositions.add(rightPos);
+        lastEncPositions.add(frontPos);
 
-        //return Arrays.asList(
-        //       encoderTicksToInches(leftPos),
-        //        encoderTicksToInches(rightPos),
-        //        encoderTicksToInches(frontPos)
-        //);
         return Arrays.asList(
-                encoderTicksToInches(leftEncoder.getCurrentPosition()) * X_MULTIPLIER,
-                encoderTicksToInches(rightEncoder.getCurrentPosition()) * X_MULTIPLIER,
-                encoderTicksToInches(frontEncoder.getCurrentPosition()) * Y_MULTIPLIER
+               encoderTicksToInches(leftPos),
+                encoderTicksToInches(rightPos),
+                encoderTicksToInches(frontPos)
         );
 
     }
@@ -90,30 +85,24 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
     @NonNull
     @Override
     public List<Double> getWheelVelocities() {
-        //int leftVel = (int) leftEncoder.getCorrectedVelocity();
-        //int rightVel = (int) rightEncoder.getCorrectedVelocity();
-        //int frontVel = (int) frontEncoder.getCorrectedVelocity();
+        int leftVel = (int) leftEncoder.getCorrectedVelocity();
+        int rightVel = (int) rightEncoder.getCorrectedVelocity();
+        int frontVel = (int) frontEncoder.getCorrectedVelocity();
 
-        //lastEncVels.clear();
-        //lastEncVels.add(leftVel);
-        //lastEncVels.add(rightVel);
-        //lastEncVels.add(frontVel);
+        lastEncVels.clear();
+        lastEncVels.add(leftVel);
+        lastEncVels.add(rightVel);
+        lastEncVels.add(frontVel);
 
-        //return Arrays.asList(
-        //        encoderTicksToInches(leftVel),
-        //        encoderTicksToInches(rightVel),
-        //        encoderTicksToInches(frontVel )
-        //);
+        return Arrays.asList(
+                encoderTicksToInches(leftVel),
+                encoderTicksToInches(rightVel),
+                encoderTicksToInches(frontVel )
+        );
 
         // TODO: If your encoder velocity can exceed 32767 counts / second (such as the REV Through Bore and other
         //  competing magnetic encoders), change Encoder.getRawVelocity() to Encoder.getCorrectedVelocity() to enable a
         //  compensation method
-
-        return Arrays.asList(
-                encoderTicksToInches(leftEncoder.getRawVelocity()) * X_MULTIPLIER,
-                encoderTicksToInches(rightEncoder.getRawVelocity()) * X_MULTIPLIER,
-                encoderTicksToInches(frontEncoder.getRawVelocity()) * Y_MULTIPLIER
-        );
 
     }
 }

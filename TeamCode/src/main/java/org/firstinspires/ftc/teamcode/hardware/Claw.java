@@ -13,7 +13,7 @@ public class Claw extends LinearOpMode {
     public Servo servoMotor = null;
     double powServo = 0;
     double open = 1;
-    double locked = 1;
+    double locked = 0;
 
     @Override
     public void runOpMode() {

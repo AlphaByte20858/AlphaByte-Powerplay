@@ -16,6 +16,7 @@ public class Autonomoteste_odometria extends LinearOpMode {
 
         Pose2d startPose = new Pose2d(0,0, Math.toRadians(180));
 
+
         Trajectory j1 = drive.trajectoryBuilder(startPose)
                 .splineTo(new Vector2d(5,2), Math.toRadians(90))
                 .build();
